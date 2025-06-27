@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Disable oneDNN
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+# os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,13 +17,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
-DEBUG = 'RENDER' not in os.environ
+DEBUG = True
+# DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = []
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME: 
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+# if RENDER_EXTERNAL_HOSTNAME: 
+#     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
