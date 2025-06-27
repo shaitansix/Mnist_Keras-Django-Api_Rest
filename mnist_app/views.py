@@ -30,7 +30,7 @@ def classify_image(request, *args, **kwargs):
   id = kwargs['id']
   image_base64 = request.data.get('image', '')
 
-  ann_model, ann = loadAnn(id)
+  ann = loadAnn(id)
   img_matrix = getImageMatrix(image_base64)
 
   x = np.array([img_matrix])
@@ -40,7 +40,7 @@ def classify_image(request, *args, **kwargs):
   res = {
     'state': 'success',
     'result': {
-      'id': ann_model.id, 
+      'id': id, 
       'number': num, 
       'probability': pred[0][num]
     }, 

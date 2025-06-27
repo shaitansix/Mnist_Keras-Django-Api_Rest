@@ -1,7 +1,7 @@
 from django.db import models
 
 class HyperparamsModel(models.Model): 
-  activation = models.CharField(max_length = 7)
+  activation = models.CharField(max_length = 10)
   learning_rate = models.FloatField()
   epochs = models.IntegerField()
   created = models.DateTimeField(auto_now_add = True)
@@ -26,8 +26,8 @@ class DataParamsModel(models.Model):
     return f'Data params - {self.id}'
 
 class AnnModel(models.Model): 
-  model_file = models.BinaryField(null = True, blank = True)
-  arquitecture = models.CharField(max_length = 12)
+  model_file = models.CharField(max_length = 100, null = True, blank = True)
+  arquitecture = models.CharField(max_length = 20)
   loss = models.FloatField()
   accuracy = models.FloatField()
   data_params = models.ForeignKey(DataParamsModel, on_delete = models.CASCADE)

@@ -1,29 +1,11 @@
 import os
 import io
 import base64
-import tempfile
 from PIL import Image
 import numpy as np
 from keras.models import load_model
+from django.conf import settings
 from .models import AnnModel, HyperparamsModel, DataParamsModel
-
-def kerasToBytes(ann): 
-  with tempfile.NamedTemporaryFile(suffix = '.keras', delete = False) as tmp_file:
-    tmp_path = tmp_file.name
-  ann.model.save(tmp_path)
-
-  with open(tmp_path, 'rb') as file:
-    model_bytes = file.read()
-  os.unlink(tmp_path)
-
-  return model_bytes
-
-def BytesToKeras(ann_model): 
-  with tempfile.NamedTemporaryFile(suffix = '.keras', delete = False) as tmp_file:
-    tmp_path = tmp_file.name
-    tmp_file.write(ann_model.model_file)
-
-  return tmp_path
 
 def saveAnn(ann): 
   hyperparams = HyperparamsModel.objects.get_or_create(
@@ -36,11 +18,8 @@ def saveAnn(ann):
     batch_size = ann.batch_size, 
     ratio_train = ann.ratio_train
   )
-  
-  model_bytes = kerasToBytes(ann)
 
   new_ann = AnnModel.objects.create(
-    model_file = model_bytes, 
     arquitecture = ','.join(ann.arquitecture), 
     loss = ann.test_loss, 
     accuracy = ann.test_acc, 
@@ -48,16 +27,18 @@ def saveAnn(ann):
     hyperparams = hyperparams[0]
   )
 
+  model_root = os.path.join('data', 'keras_models', f'ann-{new_ann.id}.keras')
+  ann.model.save(model_root)
+  new_ann.model_file = model_root
+  new_ann.save()
+
   return new_ann
 
 def loadAnn(id): 
   ann_model = AnnModel.objects.get(id = id)
-
-  tmp_path = BytesToKeras(ann_model)
-  ann = load_model(tmp_path)
-  os.unlink(tmp_path)
-  
-  return ann_model, ann
+  model_root = os.path.join(settings.BASE_DIR, ann_model.model_file)
+  ann = load_model(model_root)
+  return ann
 
 def getImageMatrix(image_base64): 
   image = image_base64.split('base64,')[1]

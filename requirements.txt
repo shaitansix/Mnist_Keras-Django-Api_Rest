@@ -6,3 +6,6 @@ tensorflow
 scikit-learn
 pillow
 numpy
+psycopg-binary
+psycopg2-binary
+python-dotenv
