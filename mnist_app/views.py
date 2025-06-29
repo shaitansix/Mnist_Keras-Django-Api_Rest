@@ -10,7 +10,7 @@ def create_ann(request):
   ann = AnnKeras(**data)
   ann.train()
 
-  new_ann = saveAnn(ann)
+  new_ann = saveAnn(ann = ann)
   res = { 
     'state': 'success',
     'result': {
@@ -30,7 +30,7 @@ def classify_image(request, *args, **kwargs):
   id = kwargs['id']
   image_base64 = request.data.get('image', '')
 
-  ann = loadAnn(id)
+  ann = loadAnn(id = id)
   img_matrix = getImageMatrix(image_base64)
 
   x = np.array([img_matrix])

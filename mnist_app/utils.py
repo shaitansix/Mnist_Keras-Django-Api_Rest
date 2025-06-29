@@ -7,7 +7,7 @@ from keras.models import load_model
 from django.conf import settings
 from .models import AnnModel, HyperparamsModel, DataParamsModel
 
-def saveAnn(ann): 
+def saveAnn(self, ann): 
   hyperparams = HyperparamsModel.objects.get_or_create(
     activation = ann.activation, 
     learning_rate = ann.learning_rate, 
@@ -34,7 +34,7 @@ def saveAnn(ann):
 
   return new_ann
 
-def loadAnn(id): 
+def loadAnn(self, id): 
   ann_model = AnnModel.objects.get(id = id)
   model_root = os.path.join(settings.BASE_DIR, ann_model.model_file)
   ann = load_model(model_root)
